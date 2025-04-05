@@ -3,13 +3,43 @@
         Mainô Pokédex
     </h1>
 
-    <input
-        type="text"
-        placeholder="Pesquise um Pokémon..."
-        class="bg-gray-800/50 rounded-2xl p-4 backdrop-blur-sm shadow-xl border border-gray-700 w-full mb-4 focus:outline-2 focus:outline-blue-500"
-        v-model="searchQuery"
-        v-debounce:300ms.unlock="searchPokemons"
-    >
+    <div class="grid md:grid-cols-3 gap-4 mb-4 items-center">
+        <div class="md:col-span-2 flex flex-col gap-y-2">
+            <label
+                class="text-md font-medium"
+                for="pokemon_search">
+                Pesquise um Pokémon pelo(a) {{ filterBy }}
+            </label>
+            <input
+                id="pokemon_search"
+                name="pokemon_search"
+                type="text"
+                placeholder="Pesquise..."
+                class="bg-gray-800/50 rounded-2xl p-4 backdrop-blur-sm shadow-xl border border-gray-700 w-full focus:outline-2 focus:outline-blue-500 h-14"
+                v-model="searchQuery"
+                v-debounce:1s.unlock="searchPokemons"
+            >
+        </div>
+
+        <div class="flex flex-col gap-y-2">
+            <label
+                class="text-md font-medium"
+                for="pokemon_filter">
+                Filtrar por
+            </label>
+            <select v-model="filterBy"
+                    class="bg-gray-800/50 rounded-2xl p-4 backdrop-blur-sm shadow-xl border border-gray-700 w-full focus:outline-2 focus:outline-blue-500 h-14"
+                    id="pokemon_filter"
+                    name="pokemon_filter"
+            >
+                <option value="nome">Nome</option>
+                <option value="especie">Espécie</option>
+                <option value="tipo">Tipo</option>
+                <option value="id">ID</option>
+            </select>
+        </div>
+
+    </div>
 
     <div :class="['grid gap-4', pokemons.length === 1 ? 'grid-cols-1' : 'md:grid-cols-3']">
         <RouterLink
@@ -67,6 +97,7 @@ const nextUrl = ref(null)
 const detailsLoading = ref(false)
 const searchQuery = ref('')
 const errorMessage = ref('')
+const filterBy = ref('nome')
 
 const extractPokemonId = (url) => {
     const urlParts = url.split('/')
@@ -119,6 +150,7 @@ const loadAndAppendPokemons = async (url) => {
 
         nextUrl.value = data.value.next?.replace('https://pokeapi.co/api/v2', '')
     }
+
 }
 
 const handleScroll = () => {
@@ -128,30 +160,79 @@ const handleScroll = () => {
     }
 }
 
+const renderPokemonByNameOrId = async () => {
+    const {fetchData: showPokemon, data: pokemonData} = useApi()
+    await showPokemon(`/pokemon/${searchQuery.value.toLowerCase()}`)
+
+    if (pokemonData.value) {
+        pokemons.value = await Promise.all([fetchPokemonDetails(pokemonData.value)])
+        errorMessage.value = ''
+    } else {
+        pokemons.value = []
+        errorMessage.value = 'Pokémon não encontrado'
+    }
+}
+
+const renderPokemonBySpecie = async () => {
+    const {fetchData: showPokemon, data: pokemonData} = useApi()
+    await showPokemon(`/pokemon-species/${searchQuery.value.toLowerCase()}`)
+
+    if (pokemonData.value) {
+        pokemons.value = await Promise.all([fetchPokemonDetails(pokemonData.value)])
+        errorMessage.value = ''
+    } else {
+        pokemons.value = []
+        errorMessage.value = 'Pokémon não encontrado'
+    }
+}
+
+const renderPokemonByType = async () => {
+    const {fetchData: showPokemon, data: pokemonData} = useApi()
+    await showPokemon(`/type/${searchQuery.value.toLowerCase()}`)
+
+    if (pokemonData.value) {
+        pokemons.value = await Promise.all(
+            pokemonData.value.pokemon.map(p => fetchPokemonDetails(p.pokemon))
+        )
+        errorMessage.value = ''
+    } else {
+        pokemons.value = []
+        errorMessage.value = 'Pokémon não encontrado'
+    }
+}
+
 const searchPokemons = async () => {
-    console.log('searchPokemons', searchQuery.value)
     if (searchQuery.value === '') {
         pokemons.value = []
         errorMessage.value = ''
         await loadAndAppendPokemons('/pokemon?offset=0&limit=50')
-    } else {
-        const {fetchData: showPokemon, data: pokemonData} = useApi()
-        await showPokemon(`/pokemon/${searchQuery.value}`)
+        return
+    }
 
-        if (pokemonData.value) {
-            pokemons.value = await Promise.all([fetchPokemonDetails(pokemonData.value)])
-            errorMessage.value = ''
-        } else {
-            pokemons.value = []
-            errorMessage.value = 'Pokémon não encontrado'
-        }
+    if (filterBy.value === 'id') {
+        await renderPokemonByNameOrId()
+        return
+    }
+
+    if (filterBy.value === 'nome') {
+        await renderPokemonByNameOrId()
+        return
+    }
+
+    if (filterBy.value === 'especie') {
+        await renderPokemonBySpecie()
+        return
+    }
+
+    if (filterBy.value === 'tipo') {
+        await renderPokemonByType()
     }
 }
 
 onMounted(async () => {
     await loadAndAppendPokemons('/pokemon?offset=0&limit=50')
-    window.addEventListener('scroll', handleScroll)
 })
+window.addEventListener('scroll', handleScroll)
 
 onBeforeUnmount(() => {
     window.removeEventListener('scroll', handleScroll)
