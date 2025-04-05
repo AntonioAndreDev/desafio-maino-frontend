@@ -100,15 +100,7 @@
         </div>
       </div>
 
-      <div
-        v-if="loading || detailsLoading"
-        class="flex justify-center items-center mt-4"
-      >
-        <div
-          class="size-8 border-4 border-blue-300 border-t-blue-500 rounded-full animate-spin"
-        ></div>
-        <p class="ml-4 text-xl font-medium text-blue-300">Carregando...</p>
-      </div>
+      <Loading v-if="loading || detailsLoading" />
     </template>
   </BaseLayout>
 </template>
@@ -117,6 +109,7 @@
 import { onMounted, ref, onBeforeUnmount } from "vue";
 import { useApi } from "@/composables/useApi.js";
 import BaseLayout from "@/components/layouts/BaseLayout.vue";
+import Loading from "@/components/Loading.vue";
 
 const { data, fetchData: listAllPokemons, loading } = useApi();
 const pokemons = ref([]);

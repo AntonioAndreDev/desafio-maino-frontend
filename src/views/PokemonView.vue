@@ -205,26 +205,7 @@
         </div>
       </div>
 
-      <!-- Loading Spinner -->
-      <div v-if="loading" class="flex justify-center items-center h-screen">
-        <div class="relative">
-          <div
-            class="w-20 h-20 border-4 border-blue-300 border-t-blue-500 rounded-full animate-spin"
-          ></div>
-          <div
-            class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
-          >
-            <div
-              class="w-10 h-10 bg-gray-900 rounded-full flex items-center justify-center"
-            >
-              <div
-                class="w-8 h-8 bg-white rounded-full border-4 border-gray-900"
-              ></div>
-            </div>
-          </div>
-        </div>
-        <p class="ml-4 text-xl font-medium text-blue-300">Carregando...</p>
-      </div>
+      <Loading v-if="loading" />
     </template>
   </BaseLayout>
 </template>
@@ -235,6 +216,7 @@ import { useApi } from "@/composables/useApi.js";
 import { onMounted, ref } from "vue";
 import BackButton from "@/components/BackButton.vue";
 import BaseLayout from "@/components/layouts/BaseLayout.vue";
+import Loading from "@/components/Loading.vue";
 
 const route = useRoute();
 const pokemonId = route.params.id;
