@@ -41,7 +41,7 @@
 
     </div>
 
-    <div :class="['grid gap-4', pokemons.length === 1 ? 'grid-cols-1' : 'md:grid-cols-3']">
+    <div :class="['grid gap-4', pokemons.length === 1 ? 'grid-cols-1' : 'lg:grid-cols-3 md:grid-cols-2']">
         <RouterLink
             v-for="pokemon in pokemons"
             :key="pokemon.id"
