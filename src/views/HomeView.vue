@@ -1,3 +1,51 @@
+<template>
+    <main>
+        <h1 class="text-3xl mb-4">Hello Mainô!</h1>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+
+            <RouterLink
+                v-for="pokemon in pokemons"
+                :key="pokemon.id"
+                :to="{ name: 'pokemon', params: { id: pokemon.id } }"
+                class="bg-white p-4 rounded shadow border border-gray-200 hover:shadow-lg transition-shadow"
+            >
+                <div class="flex items-center justify-between">
+                    <h2 class="text-xl font-semibold capitalize">{{ pokemon.name }}</h2>
+                    <span class="text-gray-500 font-medium">#{{ pokemon.id }}</span>
+                </div>
+
+                <div class="mt-2">
+                    <div class="text-sm text-gray-600">
+                        <span class="font-medium">Espécie:</span>
+                        <span class="capitalize">{{ pokemon.species }}</span>
+                    </div>
+
+                    <div class="mt-1 flex items-center gap-1.5">
+                        <span class="text-sm font-medium text-gray-600">Tipos:</span>
+                        <div class="flex flex-wrap gap-1">
+                            <span
+                                v-for="type in pokemon.types"
+                                :key="type"
+                                class="px-2 py-1 text-xs font-medium text-white bg-blue-500 rounded-full capitalize"
+                            >
+                                {{ type }}
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </RouterLink>
+
+        </div>
+
+        <div v-if="loading || detailsLoading" class="text-center my-6 py-4 text-gray-600">
+            <div
+                class="inline-block animate-spin rounded-full h-6 w-6 border-2 border-gray-400 border-t-blue-500 mr-2"></div>
+            Carregando...
+        </div>
+    </main>
+</template>
+
 <script setup>
 import {onMounted, ref, onBeforeUnmount} from 'vue'
 import {useApi} from '@/composables/useApi.js'
@@ -72,48 +120,3 @@ onBeforeUnmount(() => {
     window.removeEventListener('scroll', handleScroll)
 })
 </script>
-
-<template>
-    <main>
-        <h1 class="text-3xl mb-4">Hello Mainô!</h1>
-
-        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-            <div
-                v-for="pokemon in pokemons"
-                :key="pokemon.id"
-                class="bg-white p-4 rounded shadow border border-gray-200 hover:shadow-lg transition-shadow"
-            >
-                <div class="flex items-center justify-between">
-                    <h2 class="text-xl font-semibold capitalize">{{ pokemon.name }}</h2>
-                    <span class="text-gray-500 font-medium">#{{ pokemon.id }}</span>
-                </div>
-
-                <div class="mt-2">
-                    <div class="text-sm text-gray-600">
-                        <span class="font-medium">Espécie:</span>
-                        <span class="capitalize">{{ pokemon.species }}</span>
-                    </div>
-
-                    <div class="mt-1 flex items-center gap-1.5">
-                        <span class="text-sm font-medium text-gray-600">Tipos:</span>
-                        <div class="flex flex-wrap gap-1">
-                            <span
-                                v-for="type in pokemon.types"
-                                :key="type"
-                                class="px-2 py-1 text-xs font-medium text-white bg-blue-500 rounded-full capitalize"
-                            >
-                                {{ type }}
-                            </span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div v-if="loading || detailsLoading" class="text-center my-6 py-4 text-gray-600">
-            <div
-                class="inline-block animate-spin rounded-full h-6 w-6 border-2 border-gray-400 border-t-blue-500 mr-2"></div>
-            Carregando...
-        </div>
-    </main>
-</template>
