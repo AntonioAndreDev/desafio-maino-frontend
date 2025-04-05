@@ -1,13 +1,16 @@
 <template>
     <div v-if="!loading">
         <!-- Header -->
-        <div class="flex flex-col sm:flex-row justify-between items-center mb-8">
-            <h1 class="text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-500 mb-4 sm:mb-0 uppercase w-fit">
-                {{ pokemonDetailsData?.name }}
-            </h1>
+        <div class="flex justify-between items-center mb-8 gap-y-4 flex-wrap">
+            <div class="flex items-center gap-x-2">
+                <BackButton/>
+                <h1 class="md:text-4xl text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-500 uppercase w-fit">
+                    {{ pokemonDetailsData?.name }}
+                </h1>
+            </div>
             <span class="bg-gray-800 px-4 py-2 rounded-full text-blue-300 font-mono">
                     #{{ pokemonId }}
-                </span>
+            </span>
         </div>
 
         <div v-if="error" class="bg-red-900/60 p-6 rounded-lg mb-8 border-l-4 border-red-500">
@@ -132,6 +135,7 @@
 import {useRoute} from "vue-router";
 import {useApi} from "@/composables/useApi.js";
 import {onMounted, ref} from "vue";
+import BackButton from "@/components/BackButton.vue";
 
 const route = useRoute();
 const pokemonId = route.params.id;
