@@ -1,49 +1,49 @@
 <template>
-    <main>
-        <h1 class="text-3xl mb-4">Hello Mainô!</h1>
+    <h1 class="text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-500 mb-4 w-fit">
+        Mainô Pokédex
+    </h1>
 
-        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+    <div class="grid md:grid-cols-3 gap-4">
 
-            <RouterLink
-                v-for="pokemon in pokemons"
-                :key="pokemon.id"
-                :to="{ name: 'pokemon', params: { id: pokemon.id } }"
-                class="bg-white p-4 rounded shadow border border-gray-200 hover:shadow-lg transition-shadow"
-            >
-                <div class="flex items-center justify-between">
-                    <h2 class="text-xl font-semibold capitalize">{{ pokemon.name }}</h2>
-                    <span class="text-gray-500 font-medium">#{{ pokemon.id }}</span>
+        <RouterLink
+            v-for="pokemon in pokemons"
+            :key="pokemon.id"
+            :to="{ name: 'pokemon', params: { id: pokemon.id } }"
+            class="bg-gray-800/50 rounded-2xl md:p-6 p-4 backdrop-blur-sm shadow-xl border border-gray-700 hover:scale-105 hover:border-gray-400 duration-300"
+        >
+            <div class="flex items-center justify-between">
+                <h2 class="text-xl font-semibold capitalize text-blue-300">{{ pokemon.name }}</h2>
+                <span class="bg-gray-800 px-4 py-2 rounded-full text-blue-300 font-mono">#{{ pokemon.id }}</span>
+            </div>
+
+            <div class="mt-2 bg-gray-700/40 px-4 py-2 rounded-lg flex flex-col gap-y-2">
+                <div class="text-sm ">
+                    <span class="font-medium">Espécie: <span class="capitalize">{{ pokemon.species }}</span></span>
+
                 </div>
 
-                <div class="mt-2">
-                    <div class="text-sm text-gray-600">
-                        <span class="font-medium">Espécie:</span>
-                        <span class="capitalize">{{ pokemon.species }}</span>
-                    </div>
-
-                    <div class="mt-1 flex items-center gap-1.5">
-                        <span class="text-sm font-medium text-gray-600">Tipos:</span>
-                        <div class="flex flex-wrap gap-1">
+                <div class="mt-1 flex  items-center gap-1.5">
+                    <span class="text-sm font-medium ">Tipos:</span>
+                    <div class="flex flex-wrap gap-1">
                             <span
                                 v-for="type in pokemon.types"
                                 :key="type"
-                                class="px-2 py-1 text-xs font-medium text-white bg-blue-500 rounded-full capitalize"
+                                class="bg-indigo-600/50 py-1 px-4 rounded-lg text-sm transition-colors"
                             >
                                 {{ type }}
                             </span>
-                        </div>
                     </div>
                 </div>
-            </RouterLink>
+            </div>
+        </RouterLink>
 
-        </div>
+    </div>
 
-        <div v-if="loading || detailsLoading" class="text-center my-6 py-4 text-gray-600">
-            <div
-                class="inline-block animate-spin rounded-full h-6 w-6 border-2 border-gray-400 border-t-blue-500 mr-2"></div>
-            Carregando...
-        </div>
-    </main>
+
+    <div v-if="loading || detailsLoading" class="flex justify-center items-center mt-4">
+        <div class="size-8 border-4 border-blue-300 border-t-blue-500 rounded-full animate-spin"></div>
+        <p class="ml-4 text-xl font-medium text-blue-300">Carregando...</p>
+    </div>
 </template>
 
 <script setup>
