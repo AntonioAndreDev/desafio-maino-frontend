@@ -3,8 +3,15 @@
         Mainô Pokédex
     </h1>
 
-    <div class="grid md:grid-cols-3 gap-4">
+    <input
+        type="text"
+        placeholder="Pesquise um Pokémon..."
+        class="bg-gray-800/50 rounded-2xl p-4 backdrop-blur-sm shadow-xl border border-gray-700 w-full mb-4 focus:outline-2 focus:outline-blue-500"
+        v-model="searchQuery"
+        v-debounce:300ms.unlock="searchPokemons"
+    >
 
+    <div :class="['grid gap-4', pokemons.length === 1 ? 'grid-cols-1' : 'md:grid-cols-3']">
         <RouterLink
             v-for="pokemon in pokemons"
             :key="pokemon.id"
@@ -37,6 +44,10 @@
             </div>
         </RouterLink>
 
+        <div v-if="errorMessage"
+             class="flex flex-col items-center justify-center mt-4 w-full col-span-3 border-l-4 border-red-600 bg-red-200 rounded-xl p-4 shadow-lg">
+            <p class="text-red-800 font-medium">{{ errorMessage }}</p>
+        </div>
     </div>
 
 
@@ -54,6 +65,8 @@ const {data, fetchData: listAllPokemons, loading} = useApi()
 const pokemons = ref([])
 const nextUrl = ref(null)
 const detailsLoading = ref(false)
+const searchQuery = ref('')
+const errorMessage = ref('')
 
 const extractPokemonId = (url) => {
     const urlParts = url.split('/')
@@ -63,7 +76,11 @@ const extractPokemonId = (url) => {
 const fetchPokemonDetails = async (pokemon) => {
     const {fetchData: fetchDetails, data: detailsData} = useApi()
 
-    const id = extractPokemonId(pokemon.url)
+    let id = pokemon.id
+
+    if (pokemon.url) {
+        id = extractPokemonId(pokemon.url)
+    }
 
     await fetchDetails(`/pokemon/${id}`)
 
@@ -108,6 +125,26 @@ const handleScroll = () => {
     const scrollBottom = window.innerHeight + window.scrollY >= document.body.offsetHeight - 50
     if (scrollBottom && nextUrl.value && !loading.value && !detailsLoading.value) {
         loadAndAppendPokemons(nextUrl.value)
+    }
+}
+
+const searchPokemons = async () => {
+    console.log('searchPokemons', searchQuery.value)
+    if (searchQuery.value === '') {
+        pokemons.value = []
+        errorMessage.value = ''
+        await loadAndAppendPokemons('/pokemon?offset=0&limit=50')
+    } else {
+        const {fetchData: showPokemon, data: pokemonData} = useApi()
+        await showPokemon(`/pokemon/${searchQuery.value}`)
+
+        if (pokemonData.value) {
+            pokemons.value = await Promise.all([fetchPokemonDetails(pokemonData.value)])
+            errorMessage.value = ''
+        } else {
+            pokemons.value = []
+            errorMessage.value = 'Pokémon não encontrado'
+        }
     }
 }
 
