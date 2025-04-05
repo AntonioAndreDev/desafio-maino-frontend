@@ -54,12 +54,10 @@
           </div>
         </RouterLink>
 
-        <div
+        <GenericErrorMessage
           v-if="errorMessage"
-          class="flex flex-col items-center justify-center mt-4 w-full col-span-3 border-l-4 border-red-600 bg-red-200 rounded-xl p-4 shadow-lg"
-        >
-          <p class="text-red-800 font-medium">{{ errorMessage }}</p>
-        </div>
+          :error-message="errorMessage"
+        />
       </div>
 
       <Loading v-if="loading || detailsLoading" />
@@ -73,13 +71,13 @@ import { useApi } from "@/composables/useApi.js";
 import BaseLayout from "@/components/layouts/BaseLayout.vue";
 import Loading from "@/components/Loading.vue";
 import TheHeader from "@/components/home/TheHeader.vue";
+import GenericErrorMessage from "@/components/GenericErrorMessage.vue";
 
 const { data, fetchData: listAllPokemons, loading } = useApi();
 const pokemons = ref([]);
 const nextUrl = ref(null);
 const detailsLoading = ref(false);
 const errorMessage = ref("");
-const filterBy = ref("nome");
 
 const extractPokemonId = (url) => {
   const urlParts = url.split("/");
@@ -222,8 +220,9 @@ const searchPokemons = async (searchQuery, filter) => {
 
 onMounted(async () => {
   await loadAndAppendPokemons("/pokemon?offset=0&limit=50");
+
+  window.addEventListener("scroll", handleScroll);
 });
-window.addEventListener("scroll", handleScroll);
 
 onBeforeUnmount(() => {
   window.removeEventListener("scroll", handleScroll);
