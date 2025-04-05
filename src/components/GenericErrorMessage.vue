@@ -1,12 +1,17 @@
 <template>
   <div
     v-if="errorMessage"
-    class="flex flex-col items-center justify-center mt-4 w-full col-span-3 border-l-4 border-red-600 bg-red-200 rounded-xl p-4 shadow-lg"
+    class="bg-red-900/60 p-6 rounded-lg mb-8 border-l-4 border-red-500"
   >
-    <p class="text-red-800 font-medium">{{ errorMessage }}</p>
+    <div class="flex items-center gap-x-2">
+      <Icon class="size-6 text-red-500" icon="ri:alert-line" />
+      <p class="text-red-300">Error: {{ errorMessage }}</p>
+    </div>
   </div>
 </template>
 
 <script setup>
+import { Icon } from "@iconify/vue";
+
 defineProps(["errorMessage"]);
 </script>
