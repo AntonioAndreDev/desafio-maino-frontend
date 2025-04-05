@@ -1,4 +1,14 @@
 <script setup>
+import {useApi} from "../../composables/useApi.js";
+import {onMounted} from "vue";
+
+const {data, fetchData} = useApi('')
+
+onMounted(async () => {
+    await fetchData('/pokemon')
+
+    console.log(data.value)
+})
 </script>
 
 <template>
