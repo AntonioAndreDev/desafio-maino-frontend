@@ -17,7 +17,7 @@
         placeholder="Pesquise..."
         class="bg-gray-800/50 rounded-2xl p-4 backdrop-blur-sm shadow-xl border border-gray-700 w-full focus:outline-2 focus:outline-blue-500 h-14"
         v-model="searchQuery"
-        v-debounce:1s.unlock="searchPokemons"
+        v-debounce:300ms.unlock="searchPokemons"
       />
     </div>
 
