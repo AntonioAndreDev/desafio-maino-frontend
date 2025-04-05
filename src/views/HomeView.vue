@@ -73,7 +73,7 @@ import Loading from "@/components/Loading.vue";
 import TheHeader from "@/components/home/TheHeader.vue";
 import GenericErrorMessage from "@/components/GenericErrorMessage.vue";
 
-const { data, fetchData: listAllPokemons, loading } = useApi();
+const { data: allPokemonsData, fetchData: listAllPokemons, loading } = useApi();
 const pokemons = ref([]);
 const nextUrl = ref(null);
 const detailsLoading = ref(false);
@@ -112,8 +112,8 @@ const fetchPokemonDetails = async (pokemon) => {
 
 const loadAndAppendPokemons = async (url) => {
   await listAllPokemons(url);
-  if (data.value) {
-    const newPokemons = data.value.results;
+  if (allPokemonsData.value) {
+    const newPokemons = allPokemonsData.value.results;
 
     detailsLoading.value = true;
     try {
@@ -128,7 +128,10 @@ const loadAndAppendPokemons = async (url) => {
       detailsLoading.value = false;
     }
 
-    nextUrl.value = data.value.next?.replace("https://pokeapi.co/api/v2", "");
+    nextUrl.value = allPokemonsData.value.next?.replace(
+      "https://pokeapi.co/api/v2",
+      "",
+    );
   }
 };
 
