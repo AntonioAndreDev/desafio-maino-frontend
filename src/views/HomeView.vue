@@ -1,45 +1,7 @@
 <template>
   <BaseLayout>
     <template #header>
-      <h1
-        class="text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-500 mb-4 w-fit"
-      >
-        Mainô Pokédex
-      </h1>
-
-      <div class="grid md:grid-cols-3 gap-4 mb-4 items-center">
-        <div class="md:col-span-2 flex flex-col gap-y-2">
-          <label class="text-md font-medium" for="pokemon_search">
-            Pesquise um Pokémon pelo(a) {{ filterBy }}
-          </label>
-          <input
-            id="pokemon_search"
-            name="pokemon_search"
-            type="text"
-            placeholder="Pesquise..."
-            class="bg-gray-800/50 rounded-2xl p-4 backdrop-blur-sm shadow-xl border border-gray-700 w-full focus:outline-2 focus:outline-blue-500 h-14"
-            v-model="searchQuery"
-            v-debounce:1s.unlock="searchPokemons"
-          />
-        </div>
-
-        <div class="flex flex-col gap-y-2">
-          <label class="text-md font-medium" for="pokemon_filter">
-            Filtrar por
-          </label>
-          <select
-            v-model="filterBy"
-            class="bg-gray-800/50 rounded-2xl p-4 backdrop-blur-sm shadow-xl border border-gray-700 w-full focus:outline-2 focus:outline-blue-500 h-14"
-            id="pokemon_filter"
-            name="pokemon_filter"
-          >
-            <option value="nome">Nome</option>
-            <option value="especie">Espécie</option>
-            <option value="tipo">Tipo</option>
-            <option value="id">ID</option>
-          </select>
-        </div>
-      </div>
+      <TheHeader @search-pokemons="searchPokemons" />
     </template>
 
     <template #default>
@@ -110,12 +72,12 @@ import { onMounted, ref, onBeforeUnmount } from "vue";
 import { useApi } from "@/composables/useApi.js";
 import BaseLayout from "@/components/layouts/BaseLayout.vue";
 import Loading from "@/components/Loading.vue";
+import TheHeader from "@/components/home/TheHeader.vue";
 
 const { data, fetchData: listAllPokemons, loading } = useApi();
 const pokemons = ref([]);
 const nextUrl = ref(null);
 const detailsLoading = ref(false);
-const searchQuery = ref("");
 const errorMessage = ref("");
 const filterBy = ref("nome");
 
@@ -185,9 +147,9 @@ const handleScroll = () => {
   }
 };
 
-const renderPokemonByNameOrId = async () => {
+const renderPokemonByNameOrId = async (searchQuery) => {
   const { fetchData: showPokemon, data: pokemonData } = useApi();
-  await showPokemon(`/pokemon/${searchQuery.value.toLowerCase()}`);
+  await showPokemon(`/pokemon/${searchQuery.toLowerCase()}`);
 
   if (pokemonData.value) {
     pokemons.value = await Promise.all([
@@ -200,9 +162,9 @@ const renderPokemonByNameOrId = async () => {
   }
 };
 
-const renderPokemonBySpecie = async () => {
+const renderPokemonBySpecie = async (searchQuery) => {
   const { fetchData: showPokemon, data: pokemonData } = useApi();
-  await showPokemon(`/pokemon-species/${searchQuery.value.toLowerCase()}`);
+  await showPokemon(`/pokemon-species/${searchQuery.toLowerCase()}`);
 
   if (pokemonData.value) {
     pokemons.value = await Promise.all([
@@ -215,9 +177,9 @@ const renderPokemonBySpecie = async () => {
   }
 };
 
-const renderPokemonByType = async () => {
+const renderPokemonByType = async (searchQuery) => {
   const { fetchData: showPokemon, data: pokemonData } = useApi();
-  await showPokemon(`/type/${searchQuery.value.toLowerCase()}`);
+  await showPokemon(`/type/${searchQuery.toLowerCase()}`);
 
   if (pokemonData.value) {
     pokemons.value = await Promise.all(
@@ -230,31 +192,31 @@ const renderPokemonByType = async () => {
   }
 };
 
-const searchPokemons = async () => {
-  if (searchQuery.value === "") {
+const searchPokemons = async (searchQuery, filter) => {
+  if (searchQuery === "") {
     pokemons.value = [];
     errorMessage.value = "";
     await loadAndAppendPokemons("/pokemon?offset=0&limit=50");
     return;
   }
 
-  if (filterBy.value === "id") {
-    await renderPokemonByNameOrId();
+  if (filter === "id") {
+    await renderPokemonByNameOrId(searchQuery);
     return;
   }
 
-  if (filterBy.value === "nome") {
-    await renderPokemonByNameOrId();
+  if (filter === "nome") {
+    await renderPokemonByNameOrId(searchQuery);
     return;
   }
 
-  if (filterBy.value === "especie") {
-    await renderPokemonBySpecie();
+  if (filter === "especie") {
+    await renderPokemonBySpecie(searchQuery);
     return;
   }
 
-  if (filterBy.value === "tipo") {
-    await renderPokemonByType();
+  if (filter === "tipo") {
+    await renderPokemonByType(searchQuery);
   }
 };
 
