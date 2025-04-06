@@ -8,6 +8,7 @@
   >
     <option v-for="idiom in idioms" :key="idiom.id" :value="idiom.id">
       {{ idiom.name }}
+      <Icon :icon="idiom.icon" class="size-2 ml-2" />
     </option>
   </select>
 </template>
@@ -16,6 +17,7 @@
 import { onMounted, ref } from "vue";
 import { useStorage } from "@vueuse/core";
 import { useI18n } from "vue-i18n";
+import { Icon } from "@iconify/vue";
 
 const storedLocale = useStorage("selectedLocale", "pt_BR");
 const { locale } = useI18n();
@@ -23,9 +25,9 @@ const { locale } = useI18n();
 const selectedIdiom = ref(storedLocale.value);
 
 const idioms = ref([
-  { id: "en_US", name: "English" },
-  { id: "pt_BR", name: "Português" },
-  { id: "es", name: "Español" },
+  { id: "en_US", name: "🇺🇸 English" },
+  { id: "pt_BR", name: "🇧🇷 Português" },
+  { id: "es", name: "🇪🇸Español" },
 ]);
 
 const updateIdiom = () => {
