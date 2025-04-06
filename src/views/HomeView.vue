@@ -29,6 +29,7 @@ const nextUrl = ref(null);
 const detailsLoading = ref(false);
 const searchLoading = ref(false);
 const errorMessage = ref("");
+const isSearchMode = ref(false);
 
 const extractPokemonId = (url) => {
   const urlParts = url.split("/");
@@ -37,7 +38,6 @@ const extractPokemonId = (url) => {
 
 const fetchPokemonDetails = async (pokemon) => {
   const { fetchData: fetchDetails, data: detailsData } = useApi();
-
   let id = pokemon.id;
 
   if (pokemon.url) {
@@ -91,7 +91,9 @@ const handleScroll = () => {
     scrollBottom &&
     nextUrl.value &&
     !loading.value &&
-    !detailsLoading.value
+    !detailsLoading.value &&
+    !searchLoading.value &&
+    !isSearchMode.value
   ) {
     loadAndAppendPokemons(nextUrl.value);
   }
@@ -145,13 +147,16 @@ const renderPokemonByType = async (searchQuery) => {
 const searchPokemons = async (searchQuery, filter) => {
   try {
     searchLoading.value = true;
+    errorMessage.value = "";
+    pokemons.value = [];
 
     if (searchQuery === "") {
-      pokemons.value = [];
-      errorMessage.value = "";
+      isSearchMode.value = false;
       await loadAndAppendPokemons("/pokemon?offset=0&limit=50");
       return;
     }
+
+    isSearchMode.value = true;
 
     if (filter === "id") {
       await renderPokemonByNameOrId(searchQuery);
