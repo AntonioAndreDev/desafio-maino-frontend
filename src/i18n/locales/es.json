@@ -9,5 +9,7 @@
     "ver_mais_movimentos": "Ver más {count} movimientos",
     "cadeia_de_evolucao": "Cadena de evolución",
     "aparicoes_em_jogos": "Apariciones en juegos",
-    "error_message": "Pokémon no encontrado o está más allá del límite de 1025"
+    "error_message": "Pokémon no encontrado o está más allá del límite de 1025",
+    "carregando": "Cargando...",
+    "voltar": "Volver"
   }
