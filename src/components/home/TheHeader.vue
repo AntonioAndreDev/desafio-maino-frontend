@@ -41,7 +41,7 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
+import { ref, watch } from "vue";
 
 const emit = defineEmits(["searchPokemons"]);
 const filterBy = ref("nome");
@@ -50,4 +50,10 @@ const searchQuery = ref("");
 const searchPokemons = () => {
   emit("searchPokemons", searchQuery.value, filterBy.value);
 };
+
+watch(filterBy, () => {
+  if (searchQuery.value) {
+    searchPokemons();
+  }
+});
 </script>
