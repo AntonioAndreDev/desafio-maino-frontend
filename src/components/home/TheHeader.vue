@@ -14,7 +14,7 @@
   <div class="grid md:grid-cols-3 gap-4 mb-4 items-center">
     <div class="md:col-span-2 flex flex-col gap-y-2">
       <label class="text-md font-medium" for="pokemon_search">
-        {{ $t("pesquise") }} {{ $t("nome") }}
+        {{ $t("pesquise") }}
       </label>
       <input
         id="pokemon_search"
