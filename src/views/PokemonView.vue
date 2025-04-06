@@ -2,6 +2,7 @@
   <BaseLayout>
     <template #header>
       <TheHeader
+        :error="error"
         :pokemonId="pokemonId"
         :pokemonDetailsData="pokemonDetailsData"
       />
