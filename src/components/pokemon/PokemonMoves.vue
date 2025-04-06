@@ -3,7 +3,9 @@
     class="bg-gray-800/50 rounded-2xl p-6 backdrop-blur-sm shadow-xl border border-gray-700"
   >
     <div class="flex justify-between items-center mb-6">
-      <h2 class="text-2xl font-semibold text-blue-300">Movimentos</h2>
+      <h2 class="text-2xl font-semibold text-blue-300">
+        {{ $t("movimentos") }}
+      </h2>
       <div class="text-sm text-gray-400">
         Total: {{ pokemonDetailsData.moves?.length || 0 }}
       </div>
@@ -29,7 +31,11 @@
         @click="movesLimit = pokemonDetailsData.moves?.length"
         class="bg-indigo-600/50 hover:bg-indigo-600 px-4 py-2 rounded-lg text-sm transition-colors cursor-pointer"
       >
-        Ver mais {{ pokemonDetailsData.moves.length - 20 }} movimentos
+        {{
+          $t("ver_mais_movimentos", {
+            count: pokemonDetailsData.moves?.length - 20,
+          })
+        }}
       </button>
     </div>
     <div v-else-if="movesLimit > 20" class="mt-4 text-center">

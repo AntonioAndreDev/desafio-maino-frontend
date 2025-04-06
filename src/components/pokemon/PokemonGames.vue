@@ -3,7 +3,7 @@
     class="bg-gray-800/50 rounded-2xl p-6 backdrop-blur-sm shadow-xl border border-gray-700"
   >
     <h2 class="text-2xl font-semibold mb-6 text-blue-300">
-      Aparições em Jogos
+      {{ $t("aparicoes_em_jogos") }}
     </h2>
 
     <div

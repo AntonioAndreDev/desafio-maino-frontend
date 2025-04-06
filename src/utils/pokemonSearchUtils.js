@@ -8,6 +8,7 @@ const extractPokemonId = (url) => {
 export async function renderPokemonByNameOrId(
   searchQuery,
   fetchPokemonDetails,
+  t,
 ) {
   const { fetchData: showPokemon, data: pokemonData } = useApi();
   await showPokemon(`/pokemon/${searchQuery.toLowerCase()}`);
@@ -22,12 +23,16 @@ export async function renderPokemonByNameOrId(
   } else {
     return {
       pokemons: [],
-      errorMessage: "Pokémon não encontrado ou está além do limite de 1025",
+      errorMessage: t("error_message"),
     };
   }
 }
 
-export async function renderPokemonBySpecie(searchQuery, fetchPokemonDetails) {
+export async function renderPokemonBySpecie(
+  searchQuery,
+  fetchPokemonDetails,
+  t,
+) {
   const { fetchData: showSpecies, data: speciesData } = useApi();
   await showSpecies(`/pokemon-species/${searchQuery.toLowerCase()}`);
 
@@ -41,12 +46,12 @@ export async function renderPokemonBySpecie(searchQuery, fetchPokemonDetails) {
   } else {
     return {
       pokemons: [],
-      errorMessage: "Espécie não encontrada ou está além do limite de 1025",
+      errorMessage: t("error_message"),
     };
   }
 }
 
-export async function renderPokemonByType(searchQuery, fetchPokemonDetails) {
+export async function renderPokemonByType(searchQuery, fetchPokemonDetails, t) {
   const { fetchData: showType, data: typeData } = useApi();
   await showType(`/type/${searchQuery.toLowerCase()}`);
 
@@ -67,7 +72,7 @@ export async function renderPokemonByType(searchQuery, fetchPokemonDetails) {
   if (filtered.length === 0) {
     return {
       pokemons: [],
-      errorMessage: "Nenhum Pokémon desse tipo com ID até 1025 encontrado",
+      errorMessage: t("error_message"),
     };
   }
 

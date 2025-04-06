@@ -1,20 +1,24 @@
 <template>
-  <h1
-    class="text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-500 mb-4 w-fit"
-  >
-    Mainô Pokédex
-  </h1>
+  <div class="flex justify-between items-center">
+    <h1
+      class="text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-500 mb-4 w-fit"
+    >
+      Mainô Pokédex
+    </h1>
+
+    <ChangeIdiom />
+  </div>
 
   <div class="grid md:grid-cols-3 gap-4 mb-4 items-center">
     <div class="md:col-span-2 flex flex-col gap-y-2">
       <label class="text-md font-medium" for="pokemon_search">
-        Pesquise um Pokémon pelo(a) {{ filterBy }}
+        {{ $t("pesquise") }} {{ $t("nome") }}
       </label>
       <input
         id="pokemon_search"
         name="pokemon_search"
         type="text"
-        placeholder="Pesquise..."
+        :placeholder="$t('pesquise_placeholder')"
         class="bg-gray-800/50 rounded-2xl p-4 backdrop-blur-sm shadow-xl border border-gray-700 w-full focus:outline-2 focus:outline-blue-500 h-14"
         v-model="searchQuery"
         v-debounce:300ms.unlock="searchPokemons"
@@ -23,17 +27,17 @@
 
     <div class="flex flex-col gap-y-2">
       <label class="text-md font-medium" for="pokemon_filter">
-        Filtrar por
+        {{ $t("filtrar_por") }}
       </label>
       <select
         v-model="filterBy"
-        class="bg-gray-800/50 rounded-2xl p-4 backdrop-blur-sm shadow-xl border border-gray-700 w-full focus:outline-2 focus:outline-blue-500 h-14"
+        class="bg-gray-800/50 rounded-2xl p-4 backdrop-blur-sm shadow-xl border border-gray-700 w-full focus:outline-2 focus:outline-blue-500 h-14 capitalize"
         id="pokemon_filter"
         name="pokemon_filter"
       >
-        <option value="nome">Nome</option>
-        <option value="especie">Espécie</option>
-        <option value="tipo">Tipo</option>
+        <option value="nome">{{ $t("nome") }}</option>
+        <option value="especie">{{ $t("especie") }}</option>
+        <option value="tipo">{{ $t("tipo") }}</option>
         <option value="id">ID</option>
       </select>
     </div>
@@ -42,6 +46,7 @@
 
 <script setup>
 import { ref, watch } from "vue";
+import ChangeIdiom from "@/components/ChangeIdiom.vue";
 
 const emit = defineEmits(["searchPokemons"]);
 const filterBy = ref("nome");

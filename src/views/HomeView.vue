@@ -27,7 +27,9 @@ import {
   renderPokemonBySpecie,
   renderPokemonByType,
 } from "@/utils/pokemonSearchUtils.js";
+import { useI18n } from "vue-i18n";
 
+const { t } = useI18n();
 const { data: allPokemonsData, fetchData: listAllPokemons, loading } = useApi();
 const pokemons = ref([]);
 const nextUrl = ref(null);
@@ -113,13 +115,17 @@ const searchPokemons = async (searchQuery, filter) => {
     let result = { pokemons: [], errorMessage: "" };
 
     if (filter === "id" || filter === "nome") {
-      result = await renderPokemonByNameOrId(searchQuery, fetchPokemonDetails);
+      result = await renderPokemonByNameOrId(
+        searchQuery,
+        fetchPokemonDetails,
+        t,
+      );
     }
     if (filter === "especie") {
-      result = await renderPokemonBySpecie(searchQuery, fetchPokemonDetails);
+      result = await renderPokemonBySpecie(searchQuery, fetchPokemonDetails, t);
     }
     if (filter === "tipo") {
-      result = await renderPokemonByType(searchQuery, fetchPokemonDetails);
+      result = await renderPokemonByType(searchQuery, fetchPokemonDetails, t);
     }
 
     pokemons.value = result.pokemons;

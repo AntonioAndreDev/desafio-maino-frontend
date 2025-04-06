@@ -9,17 +9,21 @@
         {{ pokemonDetailsData?.name }}
       </h1>
     </div>
-    <span
-      v-if="!error"
-      class="bg-gray-800 px-4 py-2 rounded-full text-blue-300 font-mono"
-    >
-      #{{ pokemonId }}
-    </span>
+    <div class="flex gap-x-2">
+      <span
+        v-if="!error"
+        class="bg-gray-800 px-4 py-2 rounded-full text-blue-300 font-mono"
+      >
+        #{{ pokemonId }}
+      </span>
+      <ChangeIdiom />
+    </div>
   </div>
 </template>
 
 <script setup>
 import BackButton from "@/components/BackButton.vue";
+import ChangeIdiom from "@/components/ChangeIdiom.vue";
 
 defineProps(["pokemonId", "pokemonDetailsData", "error"]);
 </script>
