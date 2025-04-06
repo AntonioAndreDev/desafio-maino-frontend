@@ -1,5 +1,5 @@
 <template>
-  <div class="flex justify-between items-center">
+  <div class="flex md:flex-row flex-col gap-4 justify-between items-center">
     <RouterLink :to="{ name: 'home' }">
       <h1
         class="text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-500 mb-4 w-fit"
@@ -8,7 +8,7 @@
       </h1>
     </RouterLink>
 
-    <ChangeIdiom />
+    <ChangeIdiom class="mb-6" />
   </div>
 
   <div class="grid md:grid-cols-3 gap-4 mb-4 items-center">
