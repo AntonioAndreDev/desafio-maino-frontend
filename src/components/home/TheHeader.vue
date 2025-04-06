@@ -37,10 +37,10 @@
         id="pokemon_filter"
         name="pokemon_filter"
       >
-        <option value="nome">{{ $t("nome") }}</option>
-        <option value="especie">{{ $t("especie") }}</option>
-        <option value="tipo">{{ $t("tipo") }}</option>
-        <option value="id">ID</option>
+        <option class="capitalize" value="nome">{{ $t("nome") }}</option>
+        <option class="capitalize" value="especie">{{ $t("especie") }}</option>
+        <option class="capitalize" value="tipo">{{ $t("tipo") }}</option>
+        <option class="capitalize" value="id">ID</option>
       </select>
     </div>
   </div>
