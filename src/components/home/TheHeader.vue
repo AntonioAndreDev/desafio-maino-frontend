@@ -1,10 +1,12 @@
 <template>
   <div class="flex justify-between items-center">
-    <h1
-      class="text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-500 mb-4 w-fit"
-    >
-      Mainô Pokédex
-    </h1>
+    <RouterLink :to="{ name: 'home' }">
+      <h1
+        class="text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-500 mb-4 w-fit"
+      >
+        Mainô Pokédex
+      </h1>
+    </RouterLink>
 
     <ChangeIdiom />
   </div>
