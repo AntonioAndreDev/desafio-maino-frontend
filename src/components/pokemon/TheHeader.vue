@@ -1,6 +1,8 @@
 <template>
-  <div class="flex justify-between items-center mb-8 gap-y-4 flex-wrap">
-    <div class="flex items-center gap-x-2">
+  <div
+    class="flex md:flex-row flex-col justify-between md:items-center mb-8 gap-y-4 flex-wrap"
+  >
+    <div class="flex items-center flex-wrap gap-2">
       <BackButton />
       <h1
         v-if="!error"
@@ -8,14 +10,15 @@
       >
         {{ pokemonDetailsData?.name }}
       </h1>
-    </div>
-    <div class="flex gap-x-2">
+
       <span
         v-if="!error"
         class="bg-gray-800 px-4 py-2 rounded-full text-blue-300 font-mono"
       >
         #{{ pokemonId }}
       </span>
+    </div>
+    <div class="flex items-center gap-x-2">
       <ChangeIdiom />
     </div>
   </div>

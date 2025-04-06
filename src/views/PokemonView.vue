@@ -2,6 +2,7 @@
   <BaseLayout>
     <template #header>
       <TheHeader
+        v-if="!loading"
         :error="error"
         :pokemonId="pokemonId"
         :pokemonDetailsData="pokemonDetailsData"

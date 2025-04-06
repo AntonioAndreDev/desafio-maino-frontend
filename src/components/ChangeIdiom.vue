@@ -4,7 +4,7 @@
     id="idiom_select"
     name="idiom_select"
     @change="updateIdiom"
-    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-32 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+    class="bg-gray-800/50 rounded-2xl p-4 backdrop-blur-sm shadow-xl border border-gray-700 md:w-40 w-full focus:outline-2 focus:outline-blue-500 h-14 capitalize"
   >
     <option v-for="idiom in idioms" :key="idiom.id" :value="idiom.id">
       {{ idiom.name }}
