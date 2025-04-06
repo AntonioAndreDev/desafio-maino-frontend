@@ -22,6 +22,11 @@ import Loading from "@/components/Loading.vue";
 import TheHeader from "@/components/home/TheHeader.vue";
 import GenericErrorMessage from "@/components/GenericErrorMessage.vue";
 import PokemonsList from "@/components/home/PokemonsList.vue";
+import {
+  renderPokemonByNameOrId,
+  renderPokemonBySpecie,
+  renderPokemonByType,
+} from "@/utils/pokemonSearchUtils.js";
 
 const { data: allPokemonsData, fetchData: listAllPokemons, loading } = useApi();
 const pokemons = ref([]);
@@ -34,31 +39,6 @@ const isSearchMode = ref(false);
 const extractPokemonId = (url) => {
   const urlParts = url.split("/");
   return urlParts[urlParts.length - 2];
-};
-
-const fetchPokemonDetails = async (pokemon) => {
-  const { fetchData: fetchDetails, data: detailsData } = useApi();
-  let id = pokemon.id;
-
-  if (pokemon.url) {
-    id = extractPokemonId(pokemon.url);
-  }
-
-  await fetchDetails(`/pokemon/${id}`);
-
-  if (detailsData.value) {
-    pokemon.id = id;
-    pokemon.types = detailsData.value.types.map((t) => t.type.name);
-
-    const { fetchData: fetchSpecies, data: speciesData } = useApi();
-    await fetchSpecies(`/pokemon-species/${id}`);
-
-    if (speciesData.value) {
-      pokemon.species = speciesData.value.name;
-    }
-
-    return pokemon;
-  }
 };
 
 const loadAndAppendPokemons = async (url) => {
@@ -91,83 +71,28 @@ const loadAndAppendPokemons = async (url) => {
   }
 };
 
-const handleScroll = () => {
-  const scrollBottom =
-    window.innerHeight + window.scrollY >= document.body.offsetHeight - 50;
-  if (
-    scrollBottom &&
-    nextUrl.value &&
-    !loading.value &&
-    !detailsLoading.value &&
-    !searchLoading.value &&
-    !isSearchMode.value
-  ) {
-    loadAndAppendPokemons(nextUrl.value);
+const fetchPokemonDetails = async (pokemon) => {
+  const { fetchData: fetchDetails, data: detailsData } = useApi();
+  let id = pokemon.id;
+
+  if (pokemon.url) {
+    id = extractPokemonId(pokemon.url);
   }
-};
 
-const renderPokemonByNameOrId = async (searchQuery) => {
-  const { fetchData: showPokemon, data: pokemonData } = useApi();
-  await showPokemon(`/pokemon/${searchQuery.toLowerCase()}`);
+  await fetchDetails(`/pokemon/${id}`);
 
-  const id = pokemonData.value ? pokemonData.value.id : null;
+  if (detailsData.value) {
+    pokemon.id = id;
+    pokemon.types = detailsData.value.types.map((t) => t.type.name);
 
-  if (pokemonData.value && id <= 1025) {
-    pokemons.value = await Promise.all([
-      fetchPokemonDetails(pokemonData.value),
-    ]);
-    errorMessage.value = "";
-  } else {
-    pokemons.value = [];
-    errorMessage.value =
-      "Pokémon não encontrado ou está além do limite de 1025";
-  }
-};
+    const { fetchData: fetchSpecies, data: speciesData } = useApi();
+    await fetchSpecies(`/pokemon-species/${id}`);
 
-const renderPokemonBySpecie = async (searchQuery) => {
-  const { fetchData: showPokemon, data: pokemonData } = useApi();
-  await showPokemon(`/pokemon-species/${searchQuery.toLowerCase()}`);
-
-  const id = pokemonData.value ? pokemonData.value.id : null;
-
-  if (pokemonData.value && id <= 1025) {
-    pokemons.value = await Promise.all([
-      fetchPokemonDetails(pokemonData.value),
-    ]);
-    errorMessage.value = "";
-  } else {
-    pokemons.value = [];
-    errorMessage.value =
-      "Pokémon não encontrado ou está além do limite de 1025";
-  }
-};
-
-const renderPokemonByType = async (searchQuery) => {
-  const { fetchData: showPokemon, data: pokemonData } = useApi();
-  await showPokemon(`/type/${searchQuery.toLowerCase()}`);
-
-  if (pokemonData.value) {
-    const filtered = pokemonData.value.pokemon
-      .map((p) => {
-        const id = parseInt(extractPokemonId(p.pokemon.url));
-        return { ...p.pokemon, id };
-      })
-      .filter((p) => p.id <= 1025);
-
-    if (filtered.length === 0) {
-      pokemons.value = [];
-      errorMessage.value =
-        "Nenhum Pokémon desse tipo com ID até 1025 encontrado";
-      return;
+    if (speciesData.value) {
+      pokemon.species = speciesData.value.name;
     }
 
-    pokemons.value = await Promise.all(
-      filtered.map((p) => fetchPokemonDetails(p)),
-    );
-    errorMessage.value = "";
-  } else {
-    pokemons.value = [];
-    errorMessage.value = "Tipo não encontrado";
+    return pokemon;
   }
 };
 
@@ -185,26 +110,37 @@ const searchPokemons = async (searchQuery, filter) => {
 
     isSearchMode.value = true;
 
-    if (filter === "id") {
-      await renderPokemonByNameOrId(searchQuery);
-      return;
-    }
+    let result = { pokemons: [], errorMessage: "" };
 
-    if (filter === "nome") {
-      await renderPokemonByNameOrId(searchQuery);
-      return;
+    if (filter === "id" || filter === "nome") {
+      result = await renderPokemonByNameOrId(searchQuery, fetchPokemonDetails);
     }
-
     if (filter === "especie") {
-      await renderPokemonBySpecie(searchQuery);
-      return;
+      result = await renderPokemonBySpecie(searchQuery, fetchPokemonDetails);
+    }
+    if (filter === "tipo") {
+      result = await renderPokemonByType(searchQuery, fetchPokemonDetails);
     }
 
-    if (filter === "tipo") {
-      await renderPokemonByType(searchQuery);
-    }
+    pokemons.value = result.pokemons;
+    errorMessage.value = result.errorMessage;
   } finally {
     searchLoading.value = false;
+  }
+};
+
+const handleScroll = () => {
+  const scrollBottom =
+    window.innerHeight + window.scrollY >= document.body.offsetHeight - 50;
+  if (
+    scrollBottom &&
+    nextUrl.value &&
+    !loading.value &&
+    !detailsLoading.value &&
+    !searchLoading.value &&
+    !isSearchMode.value
+  ) {
+    loadAndAppendPokemons(nextUrl.value);
   }
 };
 
