@@ -1,0 +1,15 @@
+{
+  "pesquise": "Pesquise um Pokémon pelo(a)",
+  "nome": "nome",
+  "especie": "espécie",
+  "tipo": "tipo",
+  "filtrar_por": "Filtrar por",
+  "pesquise_placeholder": "Pesquise...",
+  "movimentos": "Movimentos",
+  "ver_mais_movimentos": "Ver mais {count} movimentos",
+  "cadeia_de_evolucao": "Cadeia de evolução",
+  "aparicoes_em_jogos": "Aparições em jogos",
+  "error_message": "Pokémon não encontrado ou está além do limite de 1025",
+  "carregando": "Carregando...",
+  "voltar": "Voltar"
+}

@@ -4,7 +4,7 @@
     class="bg-gray-800/50 rounded-2xl p-6 backdrop-blur-sm shadow-xl border border-gray-700"
   >
     <h2 class="text-2xl font-semibold mb-6 text-blue-300">
-      Cadeia de Evolução
+      {{ $t("cadeia_de_evolucao") }}
     </h2>
 
     <div class="flex md:flex-row flex-col items-center justify-center gap-4">

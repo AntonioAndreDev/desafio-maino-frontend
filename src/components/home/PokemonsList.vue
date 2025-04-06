@@ -25,14 +25,17 @@
       <div
         class="mt-2 bg-gray-700/40 px-4 py-2 rounded-lg flex flex-col gap-y-2"
       >
-        <div class="text-sm">
-          <span class="font-medium"
-            >Espécie: <span class="capitalize">{{ pokemon.species }}</span>
+        <div v-if="pokemon.species" class="text-sm">
+          <span class="font-medium capitalize"
+            >{{ $t("especie") }}:
+            <span>{{ pokemon.species }}</span>
           </span>
         </div>
 
-        <div class="mt-1 flex items-center gap-1.5">
-          <span class="text-sm font-medium">Tipos:</span>
+        <div v-if="pokemon.types" class="mt-1 flex items-center gap-1.5">
+          <span class="text-sm font-medium capitalize"
+            >{{ $t("tipo") }}<span class="lowercase">(s)</span>:</span
+          >
           <div class="flex flex-wrap gap-1">
             <span
               v-for="type in pokemon.types"
