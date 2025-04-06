@@ -64,7 +64,14 @@ const fetchPokemonDetails = async (pokemon) => {
 const loadAndAppendPokemons = async (url) => {
   await listAllPokemons(url);
   if (allPokemonsData.value) {
-    const newPokemons = allPokemonsData.value.results;
+    // Renderiza além do limite de 1025 pokémons (id)
+    // const newPokemons = allPokemonsData.value.results;
+    const newPokemons = allPokemonsData.value.results
+      .map((pokemon) => {
+        const id = parseInt(extractPokemonId(pokemon.url));
+        return { ...pokemon, id };
+      })
+      .filter((pokemon) => pokemon.id <= 1025);
 
     detailsLoading.value = true;
     try {
@@ -103,14 +110,17 @@ const renderPokemonByNameOrId = async (searchQuery) => {
   const { fetchData: showPokemon, data: pokemonData } = useApi();
   await showPokemon(`/pokemon/${searchQuery.toLowerCase()}`);
 
-  if (pokemonData.value) {
+  const id = pokemonData.value ? pokemonData.value.id : null;
+
+  if (pokemonData.value && id <= 1025) {
     pokemons.value = await Promise.all([
       fetchPokemonDetails(pokemonData.value),
     ]);
     errorMessage.value = "";
   } else {
     pokemons.value = [];
-    errorMessage.value = "Pokémon não encontrado";
+    errorMessage.value =
+      "Pokémon não encontrado ou está além do limite de 1025";
   }
 };
 
@@ -118,14 +128,17 @@ const renderPokemonBySpecie = async (searchQuery) => {
   const { fetchData: showPokemon, data: pokemonData } = useApi();
   await showPokemon(`/pokemon-species/${searchQuery.toLowerCase()}`);
 
-  if (pokemonData.value) {
+  const id = pokemonData.value ? pokemonData.value.id : null;
+
+  if (pokemonData.value && id <= 1025) {
     pokemons.value = await Promise.all([
       fetchPokemonDetails(pokemonData.value),
     ]);
     errorMessage.value = "";
   } else {
     pokemons.value = [];
-    errorMessage.value = "Pokémon não encontrado";
+    errorMessage.value =
+      "Pokémon não encontrado ou está além do limite de 1025";
   }
 };
 
@@ -134,13 +147,27 @@ const renderPokemonByType = async (searchQuery) => {
   await showPokemon(`/type/${searchQuery.toLowerCase()}`);
 
   if (pokemonData.value) {
+    const filtered = pokemonData.value.pokemon
+      .map((p) => {
+        const id = parseInt(extractPokemonId(p.pokemon.url));
+        return { ...p.pokemon, id };
+      })
+      .filter((p) => p.id <= 1025);
+
+    if (filtered.length === 0) {
+      pokemons.value = [];
+      errorMessage.value =
+        "Nenhum Pokémon desse tipo com ID até 1025 encontrado";
+      return;
+    }
+
     pokemons.value = await Promise.all(
-      pokemonData.value.pokemon.map((p) => fetchPokemonDetails(p.pokemon)),
+      filtered.map((p) => fetchPokemonDetails(p)),
     );
     errorMessage.value = "";
   } else {
     pokemons.value = [];
-    errorMessage.value = "Pokémon não encontrado";
+    errorMessage.value = "Tipo não encontrado";
   }
 };
 
