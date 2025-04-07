@@ -14,9 +14,10 @@
   <div class="grid md:grid-cols-3 gap-4 mb-4 items-center">
     <div class="md:col-span-2 flex flex-col gap-y-2">
       <label class="text-md font-medium" for="pokemon_search">
-        {{ $t("pesquise") }} {{ $t("nome") }}
+        {{ $t("pesquise") }}
       </label>
       <input
+        v-if="filterBy !== 'tipo'"
         id="pokemon_search"
         name="pokemon_search"
         type="text"
@@ -25,6 +26,23 @@
         v-model="searchQuery"
         v-debounce:300ms.unlock="searchPokemons"
       />
+      <select
+        v-else
+        id="pokemon_search"
+        name="pokemon_search"
+        class="bg-gray-800/50 rounded-2xl p-4 backdrop-blur-sm shadow-xl border border-gray-700 w-full focus:outline-2 focus:outline-blue-500 h-14 capitalize"
+        v-model="searchQuery"
+        v-debounce:300ms.unlock="searchPokemons"
+      >
+        <option
+          v-if="allTypesData?.results"
+          v-for="type in allTypesData.results"
+          :key="type.name"
+          :value="type.name"
+        >
+          {{ type.name }}
+        </option>
+      </select>
     </div>
 
     <div class="flex flex-col gap-y-2">
@@ -49,6 +67,7 @@
 <script setup>
 import { ref, watch } from "vue";
 import ChangeIdiom from "@/components/ChangeIdiom.vue";
+import { useApi } from "@/composables/useApi.js";
 
 const emit = defineEmits(["searchPokemons"]);
 const filterBy = ref("nome");
@@ -58,8 +77,20 @@ const searchPokemons = () => {
   emit("searchPokemons", searchQuery.value, filterBy.value);
 };
 
-watch(filterBy, () => {
+const { data: allTypesData, fetchData: fetchAllTypes } = useApi();
+
+watch(filterBy, async (newVal) => {
+  if (newVal === "tipo") {
+    await fetchAllTypes("/type?offset=0&limit=18");
+  }
+
   if (searchQuery.value) {
+    searchPokemons();
+  }
+});
+
+watch(searchQuery, (newVal) => {
+  if (filterBy.value === "tipo" && newVal) {
     searchPokemons();
   }
 });

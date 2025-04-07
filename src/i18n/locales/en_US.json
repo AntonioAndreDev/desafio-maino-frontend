@@ -1,9 +1,9 @@
 {
-  "pesquise": "Search for a Pokémon by",
+  "pesquise": "Search for a Pokémon",
   "nome": "name",
   "especie": "species",
   "tipo": "type",
-  "filtrar_por": "Filter by",
+  "filtrar_por": "Search by",
   "pesquise_placeholder": "Search...",
   "movimentos": "Moves",
   "ver_mais_movimentos": "See more {count} moves",
