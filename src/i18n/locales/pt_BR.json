@@ -3,7 +3,7 @@
   "nome": "nome",
   "especie": "espécie",
   "tipo": "tipo",
-  "filtrar_por": "Busque por",
+  "filtrar_por": "Pesquise por",
   "pesquise_placeholder": "Pesquise...",
   "movimentos": "Movimentos",
   "ver_mais_movimentos": "Ver mais {count} movimentos",
