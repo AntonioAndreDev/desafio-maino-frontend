@@ -1,6 +1,6 @@
 <template>
   <div
-    v-if="pokemonDetailsData.game_indices"
+    v-if="pokemonDetailsData.game_indices.length > 0"
     class="bg-gray-800/50 rounded-2xl p-6 backdrop-blur-sm shadow-xl border border-gray-700"
   >
     <h2 class="text-2xl font-semibold mb-6 text-blue-300">
