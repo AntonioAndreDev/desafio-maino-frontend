@@ -54,11 +54,26 @@ const {
   loading,
   error,
 } = useApi();
+
+const { fetchData: fetchPokemonSpecies, data: pokemonSpeciesData } = useApi();
+
 const { fetchData: fetchPokemonEvolutionChain, data: pokemonEvolutionChain } =
   useApi();
 
 onMounted(async () => {
   await fetchPokemonDetails(`/pokemon/${pokemonId}`);
-  await fetchPokemonEvolutionChain(`/evolution-chain/${pokemonId}`);
+
+  if (pokemonDetailsData.value) {
+    await fetchPokemonSpecies(`/pokemon-species/${pokemonId}`);
+
+    if (pokemonSpeciesData.value) {
+      const evolutionChainUrl = pokemonSpeciesData.value.evolution_chain.url;
+      const evolutionChainId = evolutionChainUrl
+        .split("/")
+        .filter(Boolean)
+        .pop();
+      await fetchPokemonEvolutionChain(`/evolution-chain/${evolutionChainId}`);
+    }
+  }
 });
 </script>
