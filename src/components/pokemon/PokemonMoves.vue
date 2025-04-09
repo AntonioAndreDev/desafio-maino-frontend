@@ -1,5 +1,6 @@
 <template>
   <div
+    v-if="pokemonDetailsData.moves"
     class="bg-gray-800/50 rounded-2xl p-6 backdrop-blur-sm shadow-xl border border-gray-700"
   >
     <div class="flex justify-between items-center mb-6">
