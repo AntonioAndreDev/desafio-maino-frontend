@@ -48,6 +48,9 @@ Esse projeto pode ser acessado em produção (conforme o solicitado no processo 
   <li>
     Axios
   </li>
+  <li>
+    Pinia
+  </li>
 </ul>
 
 ## Execução do Projeto Localmente (Opcional)
